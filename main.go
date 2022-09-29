@@ -87,6 +87,18 @@ func DeleteRecipeHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Recipe has been deleted"})
 }
 
+func GetRecipeHandler(c *gin.Context) {
+	id := c.Param("id")
+	for i := 0; i < len(recipes); i++ {
+		if recipes[i].ID == id {
+			c.JSON(http.StatusOK, recipes[i])
+			return
+		}
+	}
+
+	c.JSON(http.StatusNotFound, gin.H{"error": "Recipe not found"})
+}
+
 func init() {
 	recipes = make([]Recipe, 0)
 	file, _ := ioutil.ReadFile("recipes.json")
@@ -97,6 +109,7 @@ func main() {
 	r := gin.Default()
 	r.POST("/recipes", NewRecipeHandler)
 	r.GET("/recipes", ListRecipesHandler)
+	r.GET("/recipes/:id", GetRecipeHandler)
 	r.PUT("/recipes/:id", UpdateRecipeHandler)
 	r.DELETE("/recipes/:id", DeleteRecipeHandler)
 	r.Run()
