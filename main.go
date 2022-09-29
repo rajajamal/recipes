@@ -21,6 +21,10 @@ type Recipe struct {
 	PublishedAt  time.Time `json:"publishedAt"`
 }
 
+func ListRecipesHandler(c *gin.Context) {
+	c.JSON(http.StatusOK, recipes)
+}
+
 func NewRecipeHandler(c *gin.Context) {
 	var recipe Recipe
 	if err := c.ShouldBindJSON(&recipe); err != nil {
@@ -45,5 +49,6 @@ func init() {
 func main() {
 	r := gin.Default()
 	r.POST("/recipes", NewRecipeHandler)
+	r.GET("/recipes", ListRecipesHandler)
 	r.Run()
 }
